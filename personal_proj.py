@@ -1,9 +1,14 @@
 """
 Jeffin Johnykutty
+2023 Personal Project: Sports Pamphlet
+
+This program is an interactive program which the user can learn some facts and statistics about 4 NFL teams: the Philadelphia Eagles, the Dallas Cowboys, the New York Giants, and the Washington Commanders.
+For a team that the user selects, the user can learn about the current starting lineup, the team's franchise record and its stats, the team's 2022-2023 season record and its stats, and link to websites that have been used for this project.
+Web-scarping is used in this project for obtaining data from multiple websites, and csv files are generated for storing the data. I applied the Beautiful Soup package for the webscraping part of the program.
 
 #NOTES:
-    I delete sme of the test code for searching elements in the lists I used. I use test code by printing created lists on the screen. In line 104 for example, I print the list "phi_positions" to see what elements that I do not need.
-    Below, are all the variables I used for the interactive program code of the project. I organized them by team.
+    -I deleted some test code that I wrote in this program. I use test code for dealing if some data structures are working correctly. In line 104 for example, I print the list "phi_positions" to see what elements that I do not need.
+    -Below, are all the variables I used for the interactive program code of the project. They are declared in the web scarping part of the program. I organized them by team.
 
 Variables used for interactive program:
 PHI EAGLES:
@@ -86,8 +91,8 @@ soup_phi_scrape_2 = BeautifulSoup(phi_scrape_2.text, "html.parser")
 find_phi_table = soup_phi_scrape_2.find("table")
 find_phi_rows = find_phi_table.find_all("tr")
 phi_sl_file_name = "eagles_starting_lineup.csv"
-with open(phi_sl_file_name, "w", newline='') as csvfile:
-    writer_sl_csv = csv.writer(csvfile)
+with open(phi_sl_file_name, "w", newline='') as csvfile: #Opens file,
+    writer_sl_csv = csv.writer(csvfile)  #Object that writes csv files.
     for row in find_phi_rows: #Iterate through all the rows in the csv file
         cells = row.find_all("td")
         data = [cell.text for cell in cells]
@@ -328,13 +333,15 @@ was_career_record_str = was_career_record_draft_str[20:30]
 options = ("1", "2", "3", "4")
 team_names = ["Philadelphia Eagles", "Dallas Cowboys", "New York Giants", "Washington Commanders"]
 
+#Method that have no parameters, and returns nothing. It initiates the interactive program.
 def interactive_program():
     main_menu()
 
+#Method that have no parameters, and returns nothing. It displays the main menu on the screen, and ask the user to select a team.
 def main_menu():
     print_main_menu_screen()
     while True:
-        user_input = input("Please select which NFC East team would you like to learn about by entering their respective numbers: ")
+        user_input = input("Please select which NFC East team would you like to learn about by entering their respective number: ")
         if (user_input.isdigit()) and (options.__contains__(user_input) == True):
             if user_input == "1":
                 team_options(user_input, team_names[0])
@@ -349,60 +356,223 @@ def main_menu():
         else:
             print("Invalid response. Please try again.")
 
-
+#Method that have no parameters, and returns nothing. It is a helper method that displays the main-menu options.
 def print_main_menu_screen():
-    print("\nTHE NFL'S NATIONAL FOOTBALL  EASTERN CONFERENCE (NFC EAST) OVERVIEW")
+    print("\nTHE NFL'S NATIONAL FOOTBALL CONFERENCE EASTERN DIVISION (NFC EAST) OVERVIEW")
     print("\t[1] Philadelphia Eagles (PHI)")
     print("\t[2] Dallas Cowboys (DAL)")
     print("\t[3] New York Giants (NYG)")
     print("\t[4] Washington Commanders (WAS)")
     print("\t[5] Exit")
 
+#Method that passes nothing, and returns nothing, It is a helper method that displays the options of the team menu.
 def print_select_team_options():
     print("\nTEAM MAIN MENU")
-    print("[1] Starting lineup of the 2023 season")
-    print("[2] Franchise win record")
-    print("[3] 2022-23 win record")
-    print("[4] Sources and links about the team")
-    print("[5] Exit")
-    print("[6] Go back")
+    print("\t[1] Starting lineup of the 2023 season")
+    print("\t[2] Franchise win record")
+    print("\t[3] 2022-23 win record")
+    print("\t[4] Sources and links about the team")
+    print("\t[5] Exit")
+    print("\t[6] Go back")
 
+#Method that passed the team number and the team name, and it returns nothing. It displays the options of information, and asks the user to select an option.
 def team_options(team_num, team_name):
     print_select_team_options()
 
     while True:
-        user_choice = input("Please select what you want to know about the " + team_name + ": ")
+        user_choice = input("Please select what you want to know about: ")
 
         if user_choice == "5":
             exit_prog()
         elif user_choice == "6":
             main_menu()
         elif user_choice == "1":
-            starting_lineup(team_num, team_name[0])
+            starting_lineup(team_num, team_names[0])
         elif user_choice == "2":
-            franchise_record(team_num, team_name[1])
+            franchise_record(team_num, team_names[1])
         elif user_choice == "3":
-            season_record(team_num, team_name[2])
+            season_record(team_num, team_names[2])
         elif user_choice == "4":
-            sources(team_num, team_name[3])
+            sources(team_num, team_names[3])
         else:
             print("Invalid response. Please try again.")
 
+
+#Method that have no parameters and returns nothing. It terminates the program.
 def exit_prog():
     print("You have exited the program. Goodbye!")
     sys.exit(0)
 
+#Method that passes team_num and team_name, and returns nothing. It displays the 2022-23 starting lineup of the user's selected NFL team.
 def starting_lineup(team_num, team_name):
-    sys.exit(0)
 
+
+    if team_num == "1":
+        print_starting_lineup(phi_positions, phi_players)
+    elif team_num == "2":
+        print_starting_lineup(dal_positions, dal_players)
+    elif team_num == "3":
+        print_starting_lineup(nyg_positions, nyg_players)
+    else:
+        print_starting_lineup(was_positions, was_players)
+
+    legend = {"OFF":"Offense",
+              "LWR": "Left Wide-Receiver",
+              "RWR": "Right Wide-Receiver",
+              "SWR": "Slot Wide-Receiver",
+              "LT": "Left Tackle",
+              "LG": "Left Guard",
+              "C": "Center",
+              "RG": "Right Guard",
+              "RT": "Right Tackle",
+              "TE": "Tight End",
+              "QB": "Quarterback",
+              "RB": "Running Back",
+
+              "DEF": "Defense",
+              "LDE": "Left Defensive End",
+              "LDT": "Left Defensive Tackle",
+              "RDT": "Right Defensive Tackle",
+              "RDE": "Right Defensive End",
+              "SLB": "Strongside Linebacker",
+              "MLB": "Middle Linebacker",
+              "WLB": "Weakside Linebacker",
+              "LCB": "Left Cornerback",
+              "SS": "Strong Safety",
+              "FS": "Free Safety",
+              "RCB": "Right Cornerback",
+              "NB": "Nickelback",
+
+              "ST": "Special Teams",
+              "PT": "Punt Team",
+              "PK": "Placekicker",
+              "LS": "Long Snapper",
+              "H": "Holder",
+              "KO": "Kickoff",
+              "PR": "Punt Returner",
+              "KR": "Kickoff Returner",
+              }
+
+    print_position_legend(legend)
+    team_options(team_num, team_name)
+
+#Method that passes team_positions, and team_players, and returns nothing. It is a helper method displays the starting lineup.
+def print_starting_lineup(team_positions, team_players):
+    for pos, player in zip(team_positions, team_players):
+        print(pos + " " + player)
+    print()
+
+#Method that passes the dictionary name legend, and returns nothing. It is a helper method that displays the legend of the abbreviated NFL positions.
+def print_position_legend(legend):
+    print("\n\n")
+    num_items = len(legend) #33 in legend dictionary
+    print("LEGEND:")
+    for pos,full_name in zip(legend.keys(), legend.values()):
+        print(pos + ": " + full_name)
+    print()
+
+#Method that passes team_num and team_name, and it returns nothing. It parses and prints the user selected team's 2022-23 season record.
 def franchise_record(team_num, team_name):
-    sys.exit(0)
+    win_num = ""
+    loss_nun = ""
+    draw_num = ""
+    franchise_record_parts = []
 
+    if team_num == "1":
+        franchise_record_parts = phi_career_record_str.split("-")  # Split the franchise record string into parts and store them in a list.
+    elif team_num == "2":
+        franchise_record_parts = dal_career_record_str.split("-")
+    elif team_num == "3":
+        franchise_record_parts = nyg_career_record_str.split("-")
+    else:
+        franchise_record_parts = was_career_record_str.split("-")
+
+    win_num = int(franchise_record_parts[0])
+    loss_nun = int(franchise_record_parts[1])
+    draw_num = int(franchise_record_parts[2])
+
+    print()
+    print("FRANCHISE RECORD:")
+    print("Number of wins: " + str(win_num))
+    print("Number of losses: " + str(loss_nun))
+    print("Number of draws: " + str(draw_num))
+
+    total_games = win_num + loss_nun + draw_num
+    winning_percentage = (win_num + (0.5 * draw_num)) / total_games
+    print("Winning percentage: {:.3f}".format(winning_percentage))
+    losing_percentage = 1 - winning_percentage
+    print("Losing percentage: {:.3f} ".format(losing_percentage))
+
+    team_options(team_num, team_name)
+
+
+#Method that passes team_num and team_name, and it returns nothing. It parses and prints the user selected team's 2022-23 season record.
 def season_record(team_num, team_name):
-    sys.exit(0)
+    win_num = ""
+    loss_nun = ""
+    draw_num = ""
+    season_record_parts = []
 
+    if team_num == "1":
+        season_record_parts = phi_record.split("-") #Split the season record string into parts and store them in a list.
+    elif team_num == "2":
+        season_record_parts = dal_record.split("-")
+    elif team_num == "3":
+        season_record_parts = nyg_record.split("-")
+    else:
+        season_record_parts = was_record.split("-")
+
+    win_num = int(season_record_parts[0])
+    loss_nun = int(season_record_parts[1])
+    draw_num = int(season_record_parts[2])
+
+    print()
+    print("SEASON RECORD:")
+    print("Number of wins: " + str(win_num))
+    print("Number of losses: " + str(loss_nun))
+    print("Number of draws: " + str(draw_num))
+
+    total_games = win_num + loss_nun + draw_num
+    winning_percentage = (win_num + (0.5 * draw_num)) / total_games
+    print("Winning percentage: {:.3f}".format(winning_percentage))
+    losing_percentage = 1 - winning_percentage
+    print("Losing percentage: {:.3f} ".format(losing_percentage))
+
+    team_options(team_num, team_name)
+
+#Method that passes in team_num and team_name, returns nothing. It displays the selected team's website names and links.
 def sources(team_num, team_name):
-    sys.exit(0)
+    print("\nSOURCES: Learn more by visiting these websites!")
+    if team_num == "1":
+        print(phi_season_record_website_name)
+        print(phi_season_record_website_link + "\n")
+        print(phi_lineup_website_name)
+        print(phi_lineup_website_link + "\n")
+        print(phi_career_record_website_name)
+        print(phi_career_record_website_link + "\n")
+    elif team_num == "2":
+        print(dal_season_record_website_name)
+        print(dal_season_record_website_link + "\n")
+        print(dal_lineup_website_name)
+        print(dal_lineup_website_link + "\n")
+        print(dal_career_record_website_name)
+        print(dal_career_record_website_link + "\n")
+    elif team_num == "3":
+        print(nyg_season_record_website_name)
+        print(nyg_season_record_website_link + "\n")
+        print(nyg_lineup_website_name)
+        print(nyg_lineup_website_link + "\n")
+        print(nyg_career_record_website_name)
+        print(nyg_career_record_website_link + "\n")
+    else:
+        print(was_season_record_website_name)
+        print(was_season_record_website_link + "\n")
+        print(was_lineup_website_name)
+        print(was_lineup_website_link + "\n")
+        print(was_career_record_website_name)
+        print(was_career_record_website_link + "\n")
+
+        team_options(team_num, team_name)
 
 interactive_program()
 

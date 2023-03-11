@@ -8,10 +8,13 @@ This program is an interactive program in which the user can learn some facts an
 Test Example: 
 When the program starts executing, it will display a "Gathering Data" message to show that the program is gathering data. The program will display the main menu to show it is finishing gathering data. The user selects an NFL team.
 
-
+![A snippet of output from the terminal that is the main menu of the program.](images/pers_proj_img_1.jpg)
 
 
 After the user selects a team, a list of options will be displayed.
 
+![A snippet of output from the terminal that is the list of options of a team.](images/pers_proj_img_2.jpg)
 
 After selection, the desired output is displayed. The list of options will be displayed again. The user also can go back to the main menu to select another team or quit the program. 
+
+![A snippet of output from the terminal that shows the run of the back option.](images/pers_proj_img_3.jpg)
